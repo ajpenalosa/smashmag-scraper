@@ -1,0 +1,1 @@
+# smashmag-scraper
