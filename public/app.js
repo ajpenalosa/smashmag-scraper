@@ -3,13 +3,23 @@ $.getJSON("/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].body + "</p>");
   }
 });
 
+$(document).on("click","#scraper", function(){
+  $.ajax({
+    method: "GET",
+    url: "/scrape"
+  }).then(function(data){
+    console.log(data);
+    location.reload();
+  })
+})
 
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {
+  $("#notes-modal").modal();
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
@@ -24,13 +34,13 @@ $(document).on("click", "p", function() {
     .then(function(data) {
       console.log(data);
       // The title of the article
-      $("#notes").append("<h2>" + data.title + "</h2>");
+      $(".modal-title").text(data.title);
       // An input to enter a new title
-      $("#notes").append("<input id='titleinput' name='title' >");
+      $("#notes").append("<div class='form-group'><input id='titleinput' class='form-control' name='title' placeholder='Title' ></div>");
       // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
+      $("#notes").append("<div class='form-group'><textarea id='bodyinput' class='form-control' name='body' placeholder='Notes'></textarea></div>");
       // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+      $("#notes").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-block'>Save Note</button>");
 
       // If there's a note in the article
       if (data.note) {

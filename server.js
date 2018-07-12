@@ -3,9 +3,7 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 
-// Our scraping tools
-// Axios is a promised-based http library, similar to jQuery's Ajax method
-// It works on the client and on the server
+// Scraping tools
 var axios = require("axios");
 var cheerio = require("cheerio");
 
@@ -31,25 +29,27 @@ mongoose.connect("mongodb://localhost/smashingmagazine");
 
 // Routes
 
-// A GET route for scraping the echoJS website
+// A GET route for scraping the Smashing Magazine website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
-  axios.get("https://www.smashingmagazine.com/articles/").then(function(response) {
+  axios.get("https://www.smashingmagazine.com/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
-    // Now, we grab every h2 within an article tag, and do the following:
-    $(".headline").each(function(i, element) {
+    // Now, we grab every article tag with a class of .article--grid__content-wrapper, and do the following:
+    $(".article--grid__content-wrapper").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
+        .children("header")
+        .children("h2")
         .children("a")
         .text();
-      result.link = $(this)
-        .children("a")
-        .attr("href");
+      result.body = $(this)
+        .children("p")
+        .text();
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
