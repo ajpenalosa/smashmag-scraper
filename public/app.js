@@ -57,12 +57,13 @@ $(document).on("click",".btn-delete", function(){
   })
 });
 
-// Whenever someone clicks a p tag
+// Whenever someone clicks the notes button
 $(document).on("click", ".btn-notes", function() {
   $("#notes-modal").modal();
   // Empty the notes from the note section
   $("#notes").empty();
-  // Save the id from the p tag
+  $(".all-notes").empty();
+
   var thisId = $(this).parent().parent().attr("data-id");
 
   // Now make an ajax call for the Article
@@ -82,14 +83,35 @@ $(document).on("click", ".btn-notes", function() {
       // A button to submit a new note, with the id of the article saved to it
       $("#notes").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-block'>Save Note</button>");
 
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
+      // If there's notes for the article
+      if (data.notes) {
+        for ( var i = 0; i < data.notes.length; i++ ) {
+          $.getJSON("/note/" + data.notes[i], function(data) {
+            var notesHTML =
+            "<div class='note' data-id='" + data._id + "'>" +
+              "<button class='btn btn-danger btn-delete-note'><i class='fas fa-trash-alt'></i></button>" +
+              "<h3>" + data.title + "</h3>" +
+              "<p>" + data.body + "</p>" +
+            "</div>";
+
+            $(".all-notes").append(notesHTML);
+          });
+        }
       }
     });
+});
+
+// Delete note button
+$(document).on("click",".btn-delete-note", function(){
+  var thisId = $(this).parent().attr("data-id");
+  console.log(thisId);
+  $.ajax({
+    method: "DELETE",
+    url: "/note/" + thisId
+  }).then(function(data){
+    console.log(data);
+    location.reload();
+  })
 });
 
 // When you click the savenote button
@@ -112,8 +134,6 @@ $(document).on("click", "#savenote", function() {
     .then(function(data) {
       // Log the response
       console.log(data);
-      // Empty the notes section
-      $("#notes").empty();
     });
 
   // Also, remove the values entered in the input and textarea for note entry

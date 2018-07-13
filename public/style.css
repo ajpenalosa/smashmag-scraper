@@ -9,3 +9,16 @@ div.card {
 div.card .btn {
     margin-right: 10px;
 }
+
+.note {
+    border-bottom: 4px solid #CED4DA;
+    margin-bottom: 20px;
+}
+
+.note:last-of-type {
+    border-bottom: 0;
+}
+
+.btn-delete-note {
+    float: right;
+}
