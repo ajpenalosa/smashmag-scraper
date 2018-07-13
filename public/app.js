@@ -77,24 +77,27 @@ $(document).on("click", ".btn-notes", function() {
       // The title of the article
       $(".modal-title").text(data.title);
       // An input to enter a new title
-      $("#notes").append("<div class='form-group'><input id='titleinput' class='form-control' name='title' placeholder='Title' ></div>");
+      $("#notes").append("<div class='form-group'><input id='titleinput' class='form-control' name='title' placeholder='Name' ></div>");
       // A textarea to add a new note body
-      $("#notes").append("<div class='form-group'><textarea id='bodyinput' class='form-control' name='body' placeholder='Notes'></textarea></div>");
+      $("#notes").append("<div class='form-group'><textarea id='bodyinput' class='form-control' name='body' placeholder='Comment'></textarea></div>");
       // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-block'>Save Note</button>");
+      $("#notes").append("<button data-id='" + data._id + "' id='savenote' class='btn btn-primary btn-block'>Save Comment</button>");
 
       // If there's notes for the article
       if (data.notes) {
         for ( var i = 0; i < data.notes.length; i++ ) {
           $.getJSON("/note/" + data.notes[i], function(data) {
-            var notesHTML =
-            "<div class='note' data-id='" + data._id + "'>" +
-              "<button class='btn btn-danger btn-delete-note'><i class='fas fa-trash-alt'></i></button>" +
-              "<h3>" + data.title + "</h3>" +
-              "<p>" + data.body + "</p>" +
-            "</div>";
-
-            $(".all-notes").append(notesHTML);
+            if(data.title) {
+              console.log(data);
+              var notesHTML =
+              "<div class='note' data-id='" + data._id + "'>" +
+                "<button class='btn btn-danger btn-delete-note'><i class='fas fa-trash-alt'></i></button>" +
+                "<h3>" + data.title + "</h3>" +
+                "<p>" + data.body + "</p>" +
+              "</div>";
+  
+              $(".all-notes").prepend(notesHTML);
+            }
           });
         }
       }
