@@ -2,22 +2,33 @@
 $.getJSON("/articles", function(data) {
   // For each one
   console.log(data);
+  console.log("this is the length " + data.length);
+
+  var articleHTML = "<h1>There are no articles</h1>";
+
+  if ( data.length !== 0 ) {
   
-  for (var i = 0; i < data.length; i++) {
-    // Display the information on the page
+    for (var i = 0; i < data.length; i++) {
+      // Display the information on the page
+  
+      var articleHTML = 
+  
+      "<div class='card' data-id='" + data[i]._id + "'>" +
+        "<h5 class='card-header'>" + data[i].title + "</h5>" +
+        "<div class='card-body'>" +
+          "<p class='card-text'>" + data[i].body + "</p>" +
+          "<button class='btn btn-danger btn-delete'><i class='fas fa-trash-alt'></i></button>" +
+          "<button class='btn btn-primary btn-notes'><i class='fas fa-sticky-note'></i></button>" +
+          "<a href='" + data[i].link + "' target='_blank' class='btn btn-primary'>Read Full Article</a>" +
+        "</div>" +
+      "</div>";
+  
+      $("#articles").append(articleHTML);
+    }
 
-    var articleHTML = 
-
-    "<div class='card' data-id='" + data[i]._id + "'>" +
-      "<h5 class='card-header'>" + data[i].title + "</h5>" +
-      "<div class='card-body'>" +
-        "<p class='card-text'>" + data[i].body + "</p>" +
-        "<button class='btn btn-danger btn-delete'><i class='fas fa-trash-alt'></i></button>" +
-        "<button class='btn btn-primary btn-notes'><i class='fas fa-sticky-note'></i></button>" +
-        "<a href='" + data[i].link + "' target='_blank' class='btn btn-primary'>Read Full Article</a>" +
-      "</div>" +
-    "</div>";
-
+  }
+  else {
+    var articleHTML = "<h1 class='text-center'>There are no articles</h1>";
     $("#articles").append(articleHTML);
   }
 });
