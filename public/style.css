@@ -5,3 +5,7 @@ section {
 div.card {
     margin-bottom: 30px;
 }
+
+div.card .btn {
+    margin-right: 10px;
+}

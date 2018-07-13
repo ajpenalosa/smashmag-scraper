@@ -130,6 +130,20 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
+// Delete route
+app.delete("/articles/:id", function (req, res) {
+
+  db.Article.findByIdAndRemove(req.params.id, function(error, article) {
+    if (error) return res.status(500).send(error);
+    const response = {
+        message: "Article successfully deleted",
+        id: req.params.id
+    };
+    return res.status(200).send(response);
+  })
+
+});
+
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");

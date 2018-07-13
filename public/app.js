@@ -12,6 +12,8 @@ $.getJSON("/articles", function(data) {
       "<h5 class='card-header'>" + data[i].title + "</h5>" +
       "<div class='card-body'>" +
         "<p class='card-text'>" + data[i].body + "</p>" +
+        "<button class='btn btn-danger btn-delete'><i class='fas fa-trash-alt'></i></button>" +
+        "<button class='btn btn-primary btn-notes'><i class='fas fa-sticky-note'></i></button>" +
         "<a href='" + data[i].link + "' target='_blank' class='btn btn-primary'>Read Full Article</a>" +
       "</div>" +
     "</div>";
@@ -20,6 +22,7 @@ $.getJSON("/articles", function(data) {
   }
 });
 
+// Scrape button
 $(document).on("click","#scraper", function(){
   $.ajax({
     method: "GET",
@@ -28,15 +31,28 @@ $(document).on("click","#scraper", function(){
     console.log(data);
     location.reload();
   })
-})
+});
+
+// Delete button
+$(document).on("click",".btn-delete", function(){
+  var thisId = $(this).parent().parent().attr("data-id");
+  console.log(thisId);
+  $.ajax({
+    method: "DELETE",
+    url: "/articles/" + thisId
+  }).then(function(data){
+    console.log(data);
+    location.reload();
+  })
+});
 
 // Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
+$(document).on("click", ".btn-notes", function() {
   $("#notes-modal").modal();
   // Empty the notes from the note section
   $("#notes").empty();
   // Save the id from the p tag
-  var thisId = $(this).attr("data-id");
+  var thisId = $(this).parent().parent().attr("data-id");
 
   // Now make an ajax call for the Article
   $.ajax({
