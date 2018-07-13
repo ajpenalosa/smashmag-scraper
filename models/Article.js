@@ -15,6 +15,10 @@ var ArticleSchema = new Schema({
     trim: true,
     required: true
   },
+  link: {
+    type: String,
+    trim: true
+  },
   note: {
     type: Schema.Types.ObjectId,
     ref: "Note"
